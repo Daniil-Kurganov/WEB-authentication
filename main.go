@@ -7,8 +7,6 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	if err := src.StartTCPServer(); err != nil {
-		log.Fatal(err)
-	}
+	src.HTTPServer()
 	log.Print("Program has been successfully executed")
 }

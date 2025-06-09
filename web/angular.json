@@ -20,7 +20,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "web-authentication:build"
+            "buildTarget": "web-authentication:build",
+            "proxyConfig": "proxy.config.json"
           }
         }
       }

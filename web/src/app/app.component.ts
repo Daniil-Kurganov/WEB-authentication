@@ -1,14 +1,23 @@
 import { Component } from "@angular/core";
-import {FormsModule} from "@angular/forms";
+import { FormsModule } from "@angular/forms";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
      
 @Component({
     selector: "web-authentication",
     standalone: true,
-    imports: [FormsModule],
-    template: `<label>Введите имя:</label>
-                 <input [(ngModel)]="name" placeholder="name">
-                 <h1>Добро пожаловать {{name}}!</h1>`
+    imports: [FormsModule, HttpClientModule],
+    template: `<div>
+      <button (click)="sendMessage()">Send Message</button>
+    </div>`
 })
-export class AppComponent { 
-    name= "";
+export class AppComponent {
+  constructor(
+     private http: HttpClient
+  ){}
+
+  sendMessage() {
+    this.http.post(`schnorr_auth/test`, null).subscribe({next: (response: any) => {
+      console.log(response);
+    },})
+  }
 }
