@@ -15,7 +15,9 @@ export class AppComponent {
   p: number;
   g: number;
   y: number;
-  numberSessionRounds: string;
+  numberSessionRounds = "-";
+  numberDoneRounds = "-";
+  numberSuccessRounds = "-";
 
   constructor(private http: HttpClient){}
 
