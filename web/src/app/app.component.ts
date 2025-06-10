@@ -1,30 +1,34 @@
-import { Component } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { HttpClient, HttpClientModule, HttpHeaders } from "@angular/common/http";
+import {Component} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpClient, HttpClientModule, HttpHeaders} from "@angular/common/http";
+import {MatCardModule} from '@angular/material/card';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
      
 @Component({
     selector: "web-authentication",
     standalone: true,
-    imports: [FormsModule, HttpClientModule],
-    template: `<div>
-      <button (click)="sendMessage()">Send Message</button>
-    </div>`
+    imports: [FormsModule, HttpClientModule, MatCardModule, MatInputModule, MatButtonModule],
+    templateUrl: "app.component.html"
 })
 export class AppComponent {
-  numberSessionRounds: number;
+  p: number;
+  g: number;
+  y: number;
+  numberSessionRounds: string;
 
   constructor(private http: HttpClient){}
 
   sendMessage() {
     const data = {
-      p: 12,
-      g: 14,
-      y: 13
+      p: this.p,
+      g: this.g,
+      y: this.y
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     this.http.post(`schnorr_auth/init_session`, data, { headers }).subscribe({
-      next: (response: number) => {
-        console.log(response);
+      next: (response: string) => {
+        console.log(`Number rounds: ${response}`);
         this.numberSessionRounds = response;
       },
       error: error => console.log(error)

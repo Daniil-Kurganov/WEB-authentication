@@ -1,0 +1,46 @@
+<div id="container">
+    <div id="header">
+        <h1>Аутентификация</h1>
+        <h2>WEB-модуль на основе протокола с нулевой передачей данных Шнорра</h2>
+    </div>
+    <div id="session header">
+        <mat-card>
+            <mat-card-content>
+                <div>
+                    <mat-form-field>
+                        <mat-label>Параметр P</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            min="1"
+                            required
+                            [(ngModel)]="p">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Параметр G</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            min="1"
+                            required
+                            [(ngModel)]="g">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Параметр Y</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            min="1"
+                            required
+                            [(ngModel)]="y">
+                    </mat-form-field>
+                    <button
+                        matButton="tonal"
+                        (click)="sendMessage()">
+                            Инициализировать сессию
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
