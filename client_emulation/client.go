@@ -6,12 +6,13 @@ import (
 	"math"
 	"math/big"
 	"math/rand/v2"
+	"os"
 	"slices"
 )
 
 const numberTests = 3
 
-var p, q, g, w, y uint64
+var p, q, g, w, y, r uint64
 
 func generateKeys() {
 	for {
@@ -42,12 +43,6 @@ func generateKeys() {
 	}
 	w = rand.Uint64N(q)
 	y = moduloReduction(g, q-w, p)
-}
-
-func main() {
-	log.SetFlags(0)
-	generateKeys()
-	log.Printf("Keys:\n open:\n  P: %v\n  Q: %v\n  G: %v\n  Y: %v\n W (close): %v\n\n", p, q, g, y, w)
 }
 
 func moduloReduction[T int | uint32 | uint64 | int64 | byte](numberInt T, power T, module T) (remainder T) {
@@ -163,4 +158,36 @@ func primaryFactorization(number uint64) (factors []uint64) {
 		factors = append(factors, number)
 	}
 	return
+}
+
+func generateX() uint64 {
+	r = rand.Uint64N(q)
+	return moduloReduction(g, r, p)
+}
+
+func generateS(e uint64) uint64 {
+	return moduloReduction(r+w*e, 1, q)
+}
+
+func main() {
+	log.SetFlags(0)
+	generateKeys()
+	log.Printf("Ключи:\n открытые:\n  P: %v\n  Q: %v\n  G: %v\n  Y: %v\n W (закрытый): %v\n\n", p, q, g, y, w)
+	for {
+		var choise int
+		fmt.Print("\n\nВыберите действие:\n 0 - выход\n 1 - сгенерировать параметр X\n 2 - сгенерировать параметр S\n\nВведите цифру действия: ")
+		fmt.Fscan(os.Stdin, &choise)
+		switch choise {
+		case 0:
+			log.Print("\nЗавершение работы программы")
+			return
+		case 1:
+			log.Printf("\nПараметр X: %d", generateX())
+		case 2:
+			var e uint64
+			fmt.Print("\nВведите параметр E: ")
+			fmt.Fscan(os.Stdin, &e)
+			log.Printf("Параметр S: %d", generateS(e))
+		}
+	}
 }

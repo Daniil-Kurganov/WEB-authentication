@@ -6,21 +6,37 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {NgIf} from '@angular/common';
      
 @Component({
     selector: "web-authentication",
     standalone: true,
-    imports: [FormsModule, HttpClientModule, MatCardModule, MatInputModule, MatButtonModule, MatStepperModule, MatFormFieldModule, ReactiveFormsModule],
+    imports: [
+      FormsModule,
+      HttpClientModule,
+      MatCardModule,
+      MatInputModule,
+      MatButtonModule,
+      MatStepperModule,
+      MatFormFieldModule,
+      ReactiveFormsModule,
+      NgIf
+    ],
     templateUrl: "app.component.html"
 })
 export class AppComponent {
+  showResult = false;
   p: number;
   g: number;
   y: number;
   x: number;
-  numberSessionRounds = "-";
-  numberDoneRounds = "-";
-  numberSuccessRounds = "-";
+  e: number;
+  s: number;
+  numberSessionRounds = 0;
+  numberDoneRounds = 0;
+  numberSuccessRounds = 0;
+  roundResult = "Определение...";
+  sessionResult: string;
   private _formBuilder = inject(FormBuilder);
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -31,7 +47,8 @@ export class AppComponent {
 
   constructor(private http: HttpClient){}
 
-  sendMessage() {
+  initSession() {
+    this.showResult = false;
     const data = {
       p: this.p,
       g: this.g,
@@ -39,11 +56,58 @@ export class AppComponent {
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     this.http.post(`schnorr_auth/init_session`, data, { headers }).subscribe({
-      next: (response: string) => {
+      next: (response: number) => {
         console.log(`Number rounds: ${response}`);
         this.numberSessionRounds = response;
       },
       error: error => console.log(error)
     });
+  }
+
+  firstStep() {
+    const data = {
+      x: this.x
+    }
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post(`schnorr_auth/first_step`, data, { headers }).subscribe({
+      next: (response: number) => {
+        console.log(`Round E parameter: ${response}`);
+        this.e = response;
+      },
+      error: error => console.log(error)
+    });
+  }
+
+  roundFinalStep() {
+    const data = {
+      s: this.s
+    }
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post(`schnorr_auth/final_step`, data, { headers }).subscribe({
+      next: (response: boolean) => {
+        console.log(`Round result: ${response}`);
+        this.numberDoneRounds++;
+        if (response) {
+          this.numberSuccessRounds++;
+          this.roundResult = "Успешно"
+        } else {
+          this.roundResult = "Не успешно"
+        }
+      },
+      error: error => console.log(error)
+    });
+    if (this.numberDoneRounds == this.numberSessionRounds) {
+      this.http.get(`schnorr_auth/session_result`).subscribe({
+        next:(response: boolean) => {
+          if (response) {
+            this.sessionResult = "Аутентификация пройжена успешно"
+          } else {
+            this.sessionResult = "Аутентификация провалена"
+          }
+        },
+        error: error => console.log(error)
+      });
+      this.showResult = true;
+    };
   }
 }
