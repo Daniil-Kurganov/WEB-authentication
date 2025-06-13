@@ -16,11 +16,14 @@ var (
 )
 
 func generateE() {
-	e = rand.Uint64()
+	e = uint64(rand.Uint32())
 }
 
 func checkX() bool {
+	// log.Printf("g = %d, s = %d, p = %d\nFirst part: %d", g, s, p, moduloReduction(g, s, p))
+	// log.Printf("y = %d, e = %d, p = %d\nSecond part: %d", y, e, p, moduloReduction(y, e, p))
 	checkedX := moduloReduction(moduloReduction(g, s, p)*moduloReduction(y, e, p), 1, p)
+	// log.Printf("X = %d, checked x = %d", x, checkedX)
 	return x == checkedX
 }
 

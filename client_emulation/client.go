@@ -12,11 +12,11 @@ import (
 
 const numberTests = 3
 
-var p, q, g, w, y, r uint64
+var p, q, g, w, y, r uint32
 
 func generateKeys() {
 	for {
-		p = getSimpleUint64()
+		p = getSimpleUint32()
 		currentFactors := primaryFactorization(p - 1)
 		slices.Reverse(currentFactors)
 		for _, currentFactor := range currentFactors {
@@ -32,7 +32,7 @@ func generateKeys() {
 		}
 	}
 	for {
-		g = rand.Uint64N(math.MaxUint64)
+		g = rand.Uint32N(math.MaxUint32)
 		if extendedEuclideanAlgorithm(uint64(g), uint64(p)) != 1 {
 			continue
 		}
@@ -41,7 +41,7 @@ func generateKeys() {
 			break
 		}
 	}
-	w = rand.Uint64N(q)
+	w = rand.Uint32N(q)
 	y = moduloReduction(g, q-w, p)
 }
 
@@ -71,7 +71,7 @@ func extendedEuclideanAlgorithm(a, b uint64) uint64 {
 	}
 }
 
-func millerRabinTest(checkedNumber, countOfWitness uint64) (numberIsPrimary bool, err error) {
+func millerRabinTest(checkedNumber, countOfWitness uint32) (numberIsPrimary bool, err error) {
 	if checkedNumber < 5 {
 		err = fmt.Errorf("invalid checked number: must be equal or bigger then 5, but got %d", checkedNumber)
 		return
@@ -92,7 +92,7 @@ func millerRabinTest(checkedNumber, countOfWitness uint64) (numberIsPrimary bool
 		t /= 2
 	}
 	var witnesses []uint64
-	for counterWitness := uint64(0); counterWitness < countOfWitness; counterWitness++ {
+	for counterWitness := uint32(0); counterWitness < countOfWitness; counterWitness++ {
 		witnesses = append(witnesses, rand.Uint64N(uint64(checkedNumber-4))+2)
 	}
 	for _, currentWitness := range witnesses {
@@ -128,12 +128,12 @@ func millerRabinTest(checkedNumber, countOfWitness uint64) (numberIsPrimary bool
 	return
 }
 
-func getSimpleUint64(rightBorder ...uint64) (result uint64) {
+func getSimpleUint32(rightBorder ...uint32) (result uint32) {
 	if len(rightBorder) == 0 {
-		rightBorder = append(rightBorder, math.MaxInt64)
+		rightBorder = append(rightBorder, math.MaxInt32)
 	}
 	for {
-		result = rand.Uint64N(rightBorder[0])
+		result = rand.Uint32N(rightBorder[0])
 		if result == 0 {
 			continue
 		}
@@ -143,12 +143,12 @@ func getSimpleUint64(rightBorder ...uint64) (result uint64) {
 	}
 }
 
-func primaryFactorization(number uint64) (factors []uint64) {
+func primaryFactorization(number uint32) (factors []uint32) {
 	for number%2 == 0 {
 		factors = append(factors, 2)
 		number = number / 2
 	}
-	for currentNumber := uint64(3); currentNumber*currentNumber <= number; currentNumber = currentNumber + 2 {
+	for currentNumber := uint32(3); currentNumber*currentNumber <= number; currentNumber = currentNumber + 2 {
 		for number%currentNumber == 0 {
 			factors = append(factors, currentNumber)
 			number = number / currentNumber
@@ -160,13 +160,13 @@ func primaryFactorization(number uint64) (factors []uint64) {
 	return
 }
 
-func generateX() uint64 {
-	r = rand.Uint64N(q)
+func generateX() uint32 {
+	r = rand.Uint32N(q)
 	return moduloReduction(g, r, p)
 }
 
-func generateS(e uint64) uint64 {
-	return moduloReduction(r+w*e, 1, q)
+func generateS(e uint32) uint64 {
+	return moduloReduction(uint64(r)+moduloReduction(uint64(w)*uint64(e), 1, uint64(q)), 1, uint64(q))
 }
 
 func main() {
@@ -182,9 +182,9 @@ func main() {
 			log.Print("\nЗавершение работы программы")
 			return
 		case 1:
-			log.Printf("\nПараметр X: %d", generateX())
+			log.Printf("\nПараметр R: %d\nПараметр X: %d", r, generateX())
 		case 2:
-			var e uint64
+			var e uint32
 			fmt.Print("\nВведите параметр E: ")
 			fmt.Fscan(os.Stdin, &e)
 			log.Printf("Параметр S: %d", generateS(e))
