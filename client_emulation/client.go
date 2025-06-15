@@ -175,7 +175,7 @@ func main() {
 	log.Printf("Ключи:\n открытые:\n  P: %v\n  Q: %v\n  G: %v\n  Y: %v\n W (закрытый): %v\n\n", p, q, g, y, w)
 	for {
 		var choise int
-		fmt.Print("\n\nВыберите действие:\n 0 - выход\n 1 - сгенерировать параметр X\n 2 - сгенерировать параметр S\n\nВведите цифру действия: ")
+		fmt.Print("\n\nВыберите действие:\n 0 - выход\n 1 - сгенерировать параметры раунда\n\nВведите цифру действия: ")
 		fmt.Fscan(os.Stdin, &choise)
 		switch choise {
 		case 0:
@@ -183,7 +183,6 @@ func main() {
 			return
 		case 1:
 			log.Printf("\nПараметр R: %d\nПараметр X: %d", r, generateX())
-		case 2:
 			var e uint32
 			fmt.Print("\nВведите параметр E: ")
 			fmt.Fscan(os.Stdin, &e)

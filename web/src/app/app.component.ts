@@ -36,6 +36,7 @@ export class AppComponent {
   numberDoneRounds = 0;
   numberSuccessRounds = 0;
   roundResult = "Определение...";
+  roundFinalButtonText = "Начать новый раунд";
   sessionResult: string;
   private _formBuilder = inject(FormBuilder);
   firstFormGroup = this._formBuilder.group({
@@ -78,7 +79,7 @@ export class AppComponent {
     });
   }
 
-  roundFinalStep() {
+  secondStep() {
     const data = {
       s: this.s
     }
@@ -95,19 +96,25 @@ export class AppComponent {
         }
       },
       error: error => console.log(error)
-    });
-    if (this.numberDoneRounds == this.numberSessionRounds) {
+    })
+    if ((this.numberDoneRounds + 1) === this.numberSessionRounds) {
+      this.roundFinalButtonText = "Просмотреть результаты сессии";
+    }
+  }
+
+  finalRoundStep() {
+    if (this.numberDoneRounds === this.numberSessionRounds) {
+      this.showResult = true;
       this.http.get(`schnorr_auth/session_result`).subscribe({
         next:(response: boolean) => {
           if (response) {
-            this.sessionResult = "Аутентификация пройжена успешно"
+            this.sessionResult = "Аутентификация пройдена успешно"
           } else {
             this.sessionResult = "Аутентификация провалена"
           }
         },
         error: error => console.log(error)
       });
-      this.showResult = true;
-    };
+    }
   }
 }

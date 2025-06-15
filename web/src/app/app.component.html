@@ -85,7 +85,7 @@
                                         formControlName="secondCtrl">
                                 </mat-form-field>
                                 <div>
-                                    <button matButton matStepperNext (click)="roundFinalStep()">Продолжить</button>
+                                    <button matButton matStepperNext (click)="secondStep()">Продолжить</button>
                                 </div>
                             </form>
                         </mat-step>
@@ -93,7 +93,7 @@
                             <ng-template matStepLabel>Результаты раунда</ng-template>
                             <p>Текущий раунд завершился с результатом: "<b>{{roundResult}}</b>"</p>
                             <div>
-                                <button matButton (click)="stepper.reset()">Начать новый раунд</button>
+                                <button matButton (click)="finalRoundStep(); stepper.reset()">{{roundFinalButtonText}}</button>
                             </div>
                         </mat-step>
                     </mat-stepper>
