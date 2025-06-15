@@ -1,70 +1,88 @@
-<div id="container">
+<div>
     <div id="header">
         <h1>Аутентификация</h1>
         <h2>WEB-модуль на основе протокола с нулевой передачей данных Шнорра</h2>
     </div>
-    <div id="session header">
+    <div class="body">
         <mat-card>
             <mat-card-content>
-                <div>
-                    <mat-form-field>
-                        <mat-label>Параметр P</mat-label>
-                        <input
-                            matInput
-                            type="number"
-                            min="1"
-                            required
-                            [(ngModel)]="p">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Параметр G</mat-label>
-                        <input
-                            matInput
-                            type="number"
-                            min="1"
-                            required
-                            [(ngModel)]="g">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Параметр Y</mat-label>
-                        <input
-                            matInput
-                            type="number"
-                            min="1"
-                            required
-                            [(ngModel)]="y">
-                    </mat-form-field>
-                    <button
-                        matButton="tonal"
-                        (click)="initSession()">
-                            Инициализировать сессию
-                    </button>
-                    <p><b>Всего раундов:</b> {{numberSessionRounds}}</p>
-                    <p><b>Завершено раундов:</b> {{numberDoneRounds}}</p>
-                    <p><b>Успешные попытки:</b> {{numberSuccessRounds}}</p>
+                <div id="session-header">
+                    <div id="session-parameters">
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Параметр P</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    min="1"
+                                    required
+                                    [(ngModel)]="p">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Параметр G</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    min="1"
+                                    required
+                                    [(ngModel)]="g">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-label>Параметр Y</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    min="1"
+                                    required
+                                    [(ngModel)]="y">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div id="statics">
+                        <p><b>Всего раундов:</b> {{numberSessionRounds}}</p>
+                        <p><b>Завершено раундов:</b> {{numberDoneRounds}}</p>
+                        <p><b>Успешные попытки:</b> {{numberSuccessRounds}}</p>
+                    </div>
+                    <div id="init-session">
+                        <button
+                            matButton="tonal"
+                            (click)="initSession()">
+                                Инициализировать сессию
+                        </button>
+                    </div>
                 </div>
             </mat-card-content>
         </mat-card>
+    </div>
+    <div class="body">
         <mat-card>
             <mat-card-content>
                 <ng-container *ngIf="showResult; else templateAction">
-                    <p><b>Общий результат: </b>{{sessionResult}}</p>
+                    <div>
+                        <p><b>Результат сессии: </b>{{sessionResult}}</p>
+                    </div>
                 </ng-container>
                 <ng-template #templateAction>     
                     <mat-stepper #stepper>
                         <mat-step [stepControl]="firstFormGroup">
                             <form [formGroup]="firstFormGroup">
-                                <ng-template matStepLabel>Заполните первый параметр</ng-template>
-                                <mat-form-field>
-                                    <mat-label>Параметр X</mat-label>
-                                    <input
-                                        matInput
-                                        type="number"
-                                        min="1"
-                                        required
-                                        [(ngModel)]="x"
-                                        formControlName="firstCtrl">
-                                </mat-form-field>
+                                <ng-template matStepLabel>Первый шаг</ng-template>
+                                <div id="first-step">
+                                    <mat-form-field>
+                                        <mat-label>Параметр X</mat-label>
+                                        <input
+                                            matInput
+                                            type="number"
+                                            min="1"
+                                            required
+                                            [(ngModel)]="x"
+                                            formControlName="firstCtrl">
+                                    </mat-form-field>
+                                </div>
                                 <div>
                                     <button matButton matStepperNext (click)="firstStep()">Продолжить</button>
                                 </div>
@@ -72,7 +90,7 @@
                         </mat-step>
                         <mat-step [stepControl]="secondFormGroup">
                             <form [formGroup]="secondFormGroup">
-                                <ng-template matStepLabel>Заполните второй параметр</ng-template>
+                                <ng-template matStepLabel>Второй шаг</ng-template>
                                 <p><b>Параметр E = </b>{{e}}</p>
                                 <mat-form-field>
                                     <mat-label>Параметр S</mat-label>
@@ -90,7 +108,7 @@
                             </form>
                         </mat-step>
                         <mat-step>
-                            <ng-template matStepLabel>Результаты раунда</ng-template>
+                            <ng-template matStepLabel>Результат раунда</ng-template>
                             <p>Текущий раунд завершился с результатом: "<b>{{roundResult}}</b>"</p>
                             <div>
                                 <button matButton (click)="finalRoundStep(); stepper.reset()">{{roundFinalButtonText}}</button>
