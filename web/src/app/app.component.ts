@@ -22,7 +22,8 @@ import {NgIf} from '@angular/common';
       ReactiveFormsModule,
       NgIf
     ],
-    templateUrl: "app.component.html"
+    templateUrl: "app.component.html",
+    styleUrl: "app.component.css"
 })
 export class AppComponent {
   showResult = false;

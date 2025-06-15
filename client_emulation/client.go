@@ -184,7 +184,7 @@ func main() {
 		case 1:
 			log.Printf("\nПараметр R: %d\nПараметр X: %d", r, generateX())
 			var e uint32
-			fmt.Print("\nВведите параметр E: ")
+			fmt.Print("Введите параметр E: ")
 			fmt.Fscan(os.Stdin, &e)
 			log.Printf("Параметр S: %d", generateS(e))
 		}
